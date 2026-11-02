@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Usuario - ArtistMusic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center font-['Inter'] px-4">
+
+    <div class="max-w-md w-full bg-slate-900/90 border border-rose-500/30 rounded-3xl p-8 backdrop-blur-xl shadow-2xl text-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-rose-500/10 to-transparent pointer-events-none"></div>
+        
+        <div class="w-20 h-20 bg-rose-500/20 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-6 relative z-10 border border-rose-500/30">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        </div>
+        
+        <h2 class="text-2xl font-black text-white mb-2 relative z-10">¿Eliminar Usuario?</h2>
+        <p class="text-sm text-slate-300 mb-8 relative z-10">
+            Estás a punto de eliminar permanentemente a <strong>{{ usuario_eliminar.username }}</strong>. Esta acción borrará sus datos y no se puede deshacer.
+        </p>
+
+        <form method="POST" class="space-y-3 relative z-10">
+            {% csrf_token %}
+            <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm py-3.5 rounded-xl transition-all shadow-lg shadow-rose-600/30">
+                Sí, Eliminar Definitivamente
+            </button>
+            <a href="{% url 'lista_usuarios' %}" class="block w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-sm py-3.5 rounded-xl transition-all border border-slate-700">
+                Cancelar
+            </a>
+        </form>
+    </div>
+
+</body>
+</html>

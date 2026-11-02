@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtistMusic - Inicio General</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-['Inter'] selection:bg-indigo-500 selection:text-white">
+
+    <!-- Barra de Navegación General -->
+    <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 text-white p-2.5 rounded-2xl font-black text-lg shadow-lg shadow-indigo-500/25">AM</span>
+                <span class="text-xl font-bold tracking-tight text-white">ArtistMusic</span>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="/" class="text-indigo-400">Inicio</a>
+                <a href="/artistas/" class="text-slate-400 hover:text-white transition-colors">Artistas</a>
+            </nav>
+            <div>
+                <a href="/artistas/" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-indigo-600/30">
+                    Ver Artistas
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 flex flex-col items-center text-center my-auto">
+        <span class="inline-flex items-center gap-2 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-wider mb-6">
+            <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span> Portal Principal para iniciar sesión
+        </span>
+        
+        <h1 class="text-4xl sm:text-7xl font-black tracking-tight text-white mb-6 leading-tight max-w-4xl">
+            Bienvenido al núcleo de <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">ArtistMusic</span>
+        </h1>
+        
+        <p class="max-w-2xl text-base sm:text-lg text-slate-400 mb-10 leading-relaxed">
+            Este es el inicio general de tu plataforma modular. Desde aquí puedes saltar directamente al módulo de artistas o dejar la base lista para cuando agregues nuevas secciones.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
+            <!-- Botón que lleva directamente a http://127.0.0.1:8000/artistas/ -->
+            <a href="/artistas/" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-8 py-4 rounded-2xl transition-all shadow-xl shadow-indigo-600/30 hover:scale-[1.02] text-base flex items-center justify-center gap-2">
+                <span>Ir al Módulo de Artistas</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </a>
+        </div>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-8 text-center text-xs text-slate-500">
+        <p>&copy; 2026 ArtistMusic - Estructura Modular</p>
+    </footer>
+
+</body>
+</html>

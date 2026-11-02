@@ -1,0 +1,33 @@
+/* ==========================================
+   ESTILOS PERSONALIZADOS - ARTISTASAPP / ARTISTMUSIC
+   ========================================== */
+
+/* Fuente base y colores generales */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #030712;
+    color: #f8fafc;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Efecto de elevación elegante para las tarjetas */
+.artist-card {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.artist-card:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.15);
+}
+
+/* Animación de zoom sofisticada para las imágenes */
+.artist-img {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.artist-card:hover .artist-img {
+    transform: scale(1.08);
+}

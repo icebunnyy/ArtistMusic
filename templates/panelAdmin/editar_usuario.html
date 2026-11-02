@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario - ArtistMusic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-['Inter'] selection:bg-amber-500 selection:text-white pb-20">
+
+    <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <span class="text-xl font-bold text-white">⚙️ Editar Cuenta</span>
+            <a href="{% url 'lista_usuarios' %}" class="text-slate-400 hover:text-white text-xs font-semibold px-4 py-2.5 transition-all">Cancelar y Volver</a>
+        </div>
+    </header>
+
+    <main class="max-w-xl mx-auto px-4 py-12 w-full">
+        <div class="bg-slate-900/60 border border-slate-800/80 p-8 rounded-3xl backdrop-blur-xl shadow-xl relative overflow-hidden">
+            <div class="absolute -right-20 -top-20 w-60 h-60 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <h2 class="text-2xl font-black text-white mb-2 relative z-10">Usuario: <span class="text-amber-400">{{ usuario_editar.username }}</span></h2>
+            <p class="text-xs text-slate-400 mb-6 relative z-10">Modifica la información personal, foto o permisos de esta cuenta.</p>
+
+            <!-- Previsualización de la foto actual -->
+            <div class="flex items-center gap-4 mb-6 p-4 rounded-2xl bg-slate-950/50 border border-slate-800/80 relative z-10">
+                <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-500/40 flex-shrink-0 bg-slate-900">
+                    {% if usuario_editar.perfil_fan %}
+                        <img src="{{ usuario_editar.perfil_fan.imagen_url }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <img src="/static/artistasApp/images/default.png" class="w-full h-full object-cover">
+                    {% endif %}
+                </div>
+                <div>
+                    <span class="text-xs font-bold text-white block">Foto de Perfil Actual</span>
+                    <span class="text-[10px] text-slate-400">Puedes cambiar la imagen subiendo un nuevo archivo abajo.</span>
+                </div>
+            </div>
+            
+            <!-- FORMULARIO CON enctype PARA PERMITIR ARCHIVOS -->
+            <form method="POST" enctype="multipart/form-data" class="space-y-5 relative z-10">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    {% if field.name == 'is_active' %}
+                        <div class="flex items-center gap-3 p-4 rounded-xl bg-slate-950/50 border border-slate-800 mt-4">
+                            {{ field }}
+                            <label class="text-xs font-semibold text-slate-300 cursor-pointer">{{ field.label }}</label>
+                        </div>
+                    {% else %}
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <span class="text-rose-400 text-[10px] block mt-1">{{ field.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm py-3.5 rounded-xl transition-all shadow-lg shadow-amber-600/30">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

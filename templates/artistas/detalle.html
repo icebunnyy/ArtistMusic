@@ -1,0 +1,176 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ artista.nombre }} - ArtistMusic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-['Inter'] selection:bg-indigo-500 selection:text-white pb-20">
+
+    <!-- Barra de Navegación -->
+    <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 text-white p-2.5 rounded-2xl font-black tracking-wider text-lg shadow-lg shadow-indigo-500/25">AM</span>
+                <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">ArtistMusic</span>
+            </div>
+            
+            <nav class="flex items-center gap-3">
+                {% if user.is_authenticated and not request.user.groups.all.0.name == 'Administrador' and not artista.usuario == user %}
+                    <a href="{% url 'dashboard_fan' %}" class="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-white border border-emerald-500/20 text-xs font-semibold px-4 py-2 rounded-xl transition-all shadow-sm">
+                        Ir a Mi Biblioteca
+                    </a>
+                {% endif %}
+                <a href="{% url 'inicio_artistas' %}" class="flex items-center space-x-2 bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all border border-slate-800 shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    <span>Volver</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 flex-grow w-full">
+        
+        <!-- Cabecera del Artista -->
+        <div class="relative overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-8 bg-slate-900/60 border border-slate-800/80 p-8 sm:p-10 rounded-3xl backdrop-blur-xl shadow-2xl">
+            <div class="absolute -left-20 -top-20 w-60 h-60 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <img src="{{ artista.imagen_url }}" alt="{{ artista.nombre }}" class="w-48 h-48 sm:w-60 sm:h-60 object-cover rounded-2xl shadow-xl border border-slate-700/50 relative z-10">
+            
+            <div class="flex-1 text-center md:text-left relative z-10 w-full">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
+                        <span class="inline-block border {{ artista.tag_color }} bg-slate-950/50 text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-inner">
+                            {{ artista.genero }}
+                        </span>
+                        
+                        <!-- BOTÓN DE SEGUIR AL ARTISTA PARA FANS -->
+                        {% if user.is_authenticated and not request.user.groups.all.0.name == 'Administrador' and not artista.usuario == user %}
+                            {% if lo_sigue %}
+                                <a href="{% url 'seguir_artista' artista.id %}" class="bg-emerald-500 text-slate-950 border border-emerald-400 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider transition-all flex items-center gap-1 shadow-md hover:bg-rose-500 hover:text-white hover:border-rose-400 group">
+                                    <span class="group-hover:hidden">❤️ Siguiendo</span>
+                                    <span class="hidden group-hover:inline">💔 Dejar de seguir</span>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'seguir_artista' artista.id %}" class="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-slate-950 border border-emerald-500/30 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider transition-all flex items-center gap-1 shadow-sm">
+                                    🤍 Seguir
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Controles de Edición -->
+                    {% if user.is_superuser or user.groups.all.0.name == 'Administrador' or artista.usuario == user %}
+                        <div class="flex items-center gap-2">
+                            <a href="{% url 'editar_artista' artista.id %}" class="bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-white border border-amber-500/30 text-xs font-semibold px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
+                                <span>Editar</span>
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl font-black text-white tracking-tight mb-4">{{ artista.nombre }}</h1>
+                <p class="text-slate-300 text-base leading-relaxed mb-6">{{ artista.biografia }}</p>
+                
+                <div class="flex flex-wrap justify-center md:justify-start gap-8 text-sm text-slate-400 border-t border-slate-800/80 pt-5">
+                    <div><strong class="text-white block text-lg">{{ artista.oyentes_mensuales }}</strong> Oyentes mensuales</div>
+                    <div><strong class="text-white block text-lg">{{ artista.pais }}</strong> País de origen</div>
+                    <div><strong class="text-white block text-lg">{{ artista.albumes|length }}</strong> Álbumes</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Álbumes -->
+        <section class="mt-16">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-3 mb-8">
+                <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/></svg>
+                Discografía y Álbumes
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for album in artista.albumes %}
+                <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 flex flex-col justify-between shadow-xl backdrop-blur-md relative">
+                    
+                    <!-- BOTÓN GUARDAR ÁLBUM PARA FANS -->
+                    {% if user.is_authenticated and not request.user.groups.all.0.name == 'Administrador' and not artista.usuario == user %}
+                        <div class="absolute top-4 right-4 z-20">
+                            {% if album.id in albumes_guardados %}
+                                <a href="{% url 'guardar_album' album.id %}" class="bg-emerald-500 text-slate-950 p-2.5 rounded-full shadow-lg hover:bg-rose-500 hover:text-white transition-all group flex items-center justify-center" title="Quitar de mi biblioteca">
+                                    <svg class="w-5 h-5 group-hover:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    <svg class="w-5 h-5 hidden group-hover:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'guardar_album' album.id %}" class="bg-slate-800/80 text-emerald-400 hover:bg-emerald-500 hover:text-white p-2.5 rounded-full border border-slate-700 hover:border-emerald-400 shadow-md transition-all flex items-center justify-center" title="Guardar álbum">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div class="flex gap-4 items-center mb-4 relative z-10">
+                        <img src="{{ album.portada }}" alt="{{ album.titulo }}" class="w-20 h-20 rounded-xl object-cover shadow-md border border-slate-800">
+                        <div class="flex-1 pr-10">
+                            <span class="text-xs text-indigo-400 font-semibold">{{ album.lanzamiento }}</span>
+                            <h3 class="text-xl font-bold text-white leading-tight">{{ album.titulo }}</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="relative z-10">
+                        <button onclick="toggleCanciones('album-{{ forloop.counter }}')" class="w-full bg-slate-800/80 hover:bg-indigo-600 text-slate-200 hover:text-white text-xs font-semibold py-2.5 px-4 rounded-xl transition-all flex items-center justify-between border border-slate-700/50">
+                            <span>Ver canciones del álbum</span>
+                            <svg class="w-4 h-4 transition-transform duration-300" id="icon-album-{{ forloop.counter }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        
+                        <div id="album-{{ forloop.counter }}" class="hidden mt-3 pt-3 border-t border-slate-800/80 space-y-2">
+                            {% for cancion in album.canciones %}
+                            <div class="flex justify-between items-center text-xs text-slate-300 bg-slate-950/40 px-3 py-2 rounded-lg border border-slate-900">
+                                <span>{{ forloop.counter }}. {{ cancion }}</span>
+                                <span class="text-indigo-400 font-medium cursor-pointer hover:underline">Reproducir</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                    <p class="text-slate-500 text-xs col-span-2">No hay álbumes registrados para este artista.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Eventos -->
+        <section class="mt-16">
+            <h2 class="text-2xl font-bold text-white flex items-center gap-3 mb-8">
+                <svg class="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Próximos Conciertos
+            </h2>
+            <div class="space-y-4">
+                {% for evento in artista.eventos %}
+                <div class="bg-slate-900/40 border border-slate-800/80 p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 backdrop-blur-md">
+                    <div>
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-2 inline-block">{{ evento.estado }}</span>
+                        <h4 class="text-lg font-bold text-white">{{ evento.lugar }}</h4>
+                        <p class="text-sm text-slate-400">{{ evento.ciudad }} • {{ evento.fecha }}</p>
+                    </div>
+                    <button class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition-all shadow-md">Comprar Entradas</button>
+                </div>
+                {% empty %}
+                    <p class="text-slate-500 text-xs">No hay eventos programados.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        function toggleCanciones(id) {
+            const el = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            if (el) el.classList.toggle('hidden');
+            if (icon) icon.classList.toggle('rotate-180');
+        }
+    </script>
+</body>
+</html>
